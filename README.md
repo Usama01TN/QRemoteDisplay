@@ -67,8 +67,8 @@ reached through pyfreerdpnative's header-generated bindings:
 | RemoteDisplay (C++, FreeRDP 1.x)                                 | This port (FreeRDP 3)                                                                                                                                           |
 |------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `freerdp_new` + `freerdp_context_new`                            | `freerdp_client_context_new`; no `PreConnect`/`PostConnect` overrides - `gdi_init` runs after `freerdp_connect`                                                 |
-| `update->BitmapUpdate`, raw 16-bpp rectangles blitted by hand    | software GDI (`gdi_init`, BGRX32); every codec — RFX, NSCodec, planar, GFX, H.264 — lands in `rdpGdi.primary_buffer`, snapshotted between event-loop iterations |
-| — (no dynamic channels in FreeRDP 1.x)                           | opt-in (`REMOTEDISPLAY_GFX`): `ChannelConnected` events attach the Graphics Pipeline and video channels to the GDI                                              |
+| `update->BitmapUpdate`, raw 16-bpp rectangles blitted by hand    | software GDI (`gdi_init`, BGRX32); every codec, RFX, NSCodec, planar, GFX, H.264 - lands in `rdpGdi.primary_buffer`, snapshotted between event-loop iterations |
+| (no dynamic channels in FreeRDP 1.x)                           | opt-in (`REMOTEDISPLAY_GFX`): `ChannelConnected` events attach the Graphics Pipeline and video channels to the GDI                                              |
 | `pointer_cache_register_callbacks` + `graphics_register_pointer` | same, with the generated `rdpPointer` struct                                                                                                                    |
 | hand-decoded XOR/AND cursor masks                                | `freerdp_image_copy_from_pointer_data` → BGRA32 → `QCursor`                                                                                                     |
 | `freerdp_get_fds` / `select` / `freerdp_check_fds`               | `freerdp_get_event_handles` / `WaitForMultipleObjects` / `freerdp_check_event_handles`                                                                          |
@@ -84,7 +84,7 @@ Files map 1:1: `freerdpclient.py`, `freerdpeventloop.py`, `remotedisplaywidget.p
 `rdpqtsoundplugin.py` ports `RdpQtSoundPlugin`: an rdpsnd device plugin on
 Qt Multimedia (`QAudioOutput` on Qt 5, `QAudioSink` on Qt 6), installed
 through `freerdp_register_addin_provider()` and selected with the static
-channel `rdpsnd sys:qt` — the same mechanism as the C++ `WITH_QTSOUND` build.
+channel `rdpsnd sys:qt`: the same mechanism as the C++ `WITH_QTSOUND` build.
 It is used automatically when QtMultimedia is importable; otherwise, or with
 `client.use_qt_sound = False`, FreeRDP's native rdpsnd backend (ALSA /
 PulseAudio / WinMM / CoreAudio) plays instead. The provider is registered
@@ -103,7 +103,7 @@ are not transferred.
 
 ### Added:
 
-- `setCredentials(user, password, domain="")` — the original had no
+- `setCredentials(user, password, domain="")`: the original had no
   authentication callback; real servers need one.
 - `connectionFailed(str)`, `disconnectFromHost()`, mouse wheel, middle button.
 
