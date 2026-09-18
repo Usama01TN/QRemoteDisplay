@@ -1,0 +1,19 @@
+[build-system]
+requires = ["setuptools>=68", "ManyQt"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "remotedisplay"
+version = "1.0.0"
+description = "RDP display widget for ManyQt, built on pyfreerdpnative (FreeRDP 3)"
+readme = "README.md"
+requires-python = ">=3.8"
+license = { text = "MIT" }
+dependencies = ["pyfreerdpnative"]
+
+[project.optional-dependencies]   # QtMultimedia is part of the PyQt5 wheel.
+pyqt5 = ["PyQt5"]                 # QtMultimedia is part of the PyQt5 wheel.
+pyside6 = ["PySide6"]             # QtMultimedia is part of the PySide6 wheel.
+
+[tool.setuptools]
+packages = ["remotedisplay"]
